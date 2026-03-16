@@ -1,0 +1,45 @@
+services:
+  backend:
+    build: ./backend          
+    env_file:
+      - .env  
+    volumes:
+      - ./backend:/app 
+      - ./backend/logs:/app/logs
+    restart: always
+    networks:
+      - dif-network     
+
+  frontend:
+    image: nginx:alpine              
+    volumes:
+      - ./frontend:/usr/share/nginx/html 
+      - ./nginx/frontend.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: always
+    networks:
+      - dif-network
+
+
+  nginx-service:
+    image: nginx:1.28.2
+    container_name: dif-proxy
+    restart: unless-stopped
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/http-connection-upgrade-map.conf:/etc/nginx/conf.d/http-connection-upgrade-map.conf:ro
+      - ${SSL_DOCKER_MOUNT:-./nginx/dev/ssl:/etc/letsencrypt:ro}
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro
+    ports:
+      - 80:80
+      - 443:443
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    networks:
+      - dif-network
+
+networks:
+  dif-network:
+    driver: bridge
