@@ -9,13 +9,6 @@ Ein interaktives Dashboard zur Förderung von Medienkompetenz, das Nutzern hilft
 
 Dieses Projekt ist ein **Proof of Concept (PoC)** und wurde primär für Bildungszwecke, Workshops und Prototyping entwickelt. 
 
-**Das System ist in seinem aktuellen Zustand NICHT für den sicheren, ungeschützten produktiven Einsatz im offenen Internet geeignet.** Folgende Architektur- und Sicherheitsprobleme müssen vor einem echten Live-Gang behoben werden:
-
-1. **Kein HTTPS (Keine Verschlüsselung):** Nginx läuft derzeit ausschließlich über Port 80 (HTTP). Alle Daten, einschließlich der Anmeldedaten für den Basic-Auth-Schutz, werden unverschlüsselt übertragen.
-2. **Basic Auth über HTTP:** Der Verzeichnisschutz (`.htpasswd`) ist ohne HTTPS nutzlos gegen Man-in-the-Middle-Angriffe, da das Passwort im Klartext mitgelesen werden kann.
-3. **Unsichere CORS-Middleware:** Das FastAPI-Backend erlaubt derzeit alle Ursprünge (`allow_origins=["*"]`). Im Produktivbetrieb könnte jede beliebige Website auf das Backend zugreifen und auf deine Kosten KI-Ressourcen verbrauchen.
-4. **Fehlendes Rate Limiting:** Es gibt keinen Schutz gegen massenhafte Anfragen. Ein Bot könnte die API überfluten, was zu einem Serverabsturz oder enormen Kosten bei den angebundenen APIs (OpenAI, IONOS, Tavily) führen kann.
-
 ---
 
 ## Verwendete Technologien & Tools
