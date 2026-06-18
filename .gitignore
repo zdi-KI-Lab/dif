@@ -16,9 +16,11 @@ Thumbs.db
 
 
 # Nginx / Proxy
+
 nginx/default.conf
-nginx/dev/ssl/
-/etc/letsencrypt/
+nginx/active/
+letsencrypt/
+
 
 # Logs
 backend/logs/*.log

@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.26.4/babel.min.js"></script>
     <style>
 /* DiF-Check Styles */
 
@@ -391,6 +391,7 @@ const ImpressumModal = ({ isOpen, onClose }) => {
           </button>
         </div>
         <div className="overflow-y-auto max-h-[calc(85vh-64px)] px-6 py-6 text-gray-700 text-sm leading-relaxed space-y-4">
+
           <h3 className="text-lg font-bold text-gray-800">Angaben gemäß § 5 TMG</h3>
           <p>
             matrix gGmbH zur Förderung von Demokratie, Teilhabe und nachhaltiger gesellschaftlicher Entwicklung<br/>
@@ -398,32 +399,54 @@ const ImpressumModal = ({ isOpen, onClose }) => {
             Düsseldorfer Straße 16<br/>
             40699 Erkrath bei Düsseldorf
           </p>
+
           <h4 className="font-semibold text-gray-800">Vertretungsberechtigt</h4>
           <p>Gregor Frankenstein-von der Beeck<br/>Guido Lohnherr</p>
+
           <h4 className="font-semibold text-gray-800">Kontakt</h4>
           <p>
             Tel.: +49(0)211-75707-0<br/>
             Fax: +49(0)211-987300<br/>
             E-Mail: <a href="mailto:info@matrix-ggmbh.de" className="text-purple-600 hover:underline">info@matrix-ggmbh.de</a>
           </p>
+
           <h4 className="font-semibold text-gray-800">Registereintrag</h4>
           <p>
             USt-IdNr. gGmbH: DE329043660<br/>
             Amtsgericht Wuppertal – HRB 33341
           </p>
+
+          <h4 className="font-semibold text-gray-800">Inhaltlich verantwortlich gemäß § 18 Abs. 2 MStV</h4>
+          <p>Arne Klauke<br/>Rittergut Haus Morp, Düsseldorfer Straße 16, 40699 Erkrath bei Düsseldorf</p>
+
           <h4 className="font-semibold text-gray-800 mt-4">Verbraucherschutz</h4>
           <p>Wir sind zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle weder bereit noch verpflichtet.</p>
+
           <h4 className="font-semibold text-gray-800 mt-4">Haftungsausschluss und Änderungsvorbehalt</h4>
-          <p>matrix GmbH &amp; Co. KG hat alle Informationen und Bestandteile dieser Website nach bestem Wissen und Gewissen zusammengestellt. Dennoch haftet sie nicht für die Vollständigkeit, Richtigkeit, Aktualität und technische Exaktheit der auf dieser Website bereitgestellten Informationen. Ebenso wenig haftet matrix GmbH &amp; Co. KG für etwaige Schäden, die beim Aufrufen oder Herunterladen von Daten aus dieser Website durch Computerviren verursacht werden. Die matrix GmbH &amp; Co. KG behält sich außerdem das Recht vor, jederzeit ohne vorherige Ankündigung Änderungen oder Ergänzungen der Informationen und Bestandteile dieser Website vorzunehmen.</p>
+          <p>matrix gGmbH hat alle Informationen und Bestandteile dieser Website nach bestem Wissen und Gewissen zusammengestellt. Dennoch haftet sie nicht für die Vollständigkeit, Richtigkeit, Aktualität und technische Exaktheit der auf dieser Website bereitgestellten Informationen. Ebenso wenig haftet matrix gGmbH für etwaige Schäden, die beim Aufrufen oder Herunterladen von Daten aus dieser Website durch Computerviren verursacht werden. matrix gGmbH behält sich außerdem das Recht vor, jederzeit ohne vorherige Ankündigung Änderungen oder Ergänzungen der Informationen und Bestandteile dieser Website vorzunehmen.</p>
+
           <h4 className="font-semibold text-gray-800 mt-4">Verweise (Hyperlinks) auf Websites Dritter</h4>
-          <p>Durch Klicken auf bestimmte Verweise (Hyperlinks) auf der matrix GmbH &amp; Co. KG-Website können Sie diese Website verlassen. Der Inhalt und die Ausgestaltung sowie etwaige Änderungen der Websites, auf die auf der matrix GmbH &amp; Co. KG-Website verwiesen wird, unterliegen nicht der Kontrolle oder dem Einfluss von matrix GmbH &amp; Co. KG. matrix GmbH &amp; Co. KG haftet daher nicht für den Inhalt einer fremden Website, auf die sie auf ihrer Website lediglich pauschal verweist, und auch nicht für auf solchen fremden Websites enthaltene Verweise auf andere Websites.</p>
+          <p>Durch Klicken auf bestimmte Verweise (Hyperlinks) auf der DiF-Check-Website können Sie diese Website verlassen. Der Inhalt und die Ausgestaltung sowie etwaige Änderungen der verlinkten Websites unterliegen nicht der Kontrolle oder dem Einfluss von matrix gGmbH. matrix gGmbH haftet daher nicht für den Inhalt fremder Websites, auf die verwiesen wird, und auch nicht für dort enthaltene weitere Verweise.</p>
+
+          {/* Förderhinweis */}
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <h4 className="font-semibold text-gray-800 mb-3">Förderhinweis</h4>
+            <p className="text-gray-600 mb-4">
+              Das diesem Vorhaben zugrunde liegende KI-Pilotprojekt wurde von der VDI/VDE Innovation + Technik GmbH (VDI/VDE-IT) beauftragt. In ihrer Funktion als Projektträger für „Mein Bildungsraum" hat die VDI/VDE-IT die Auftragsvergabe an die KI-Pilotprojekte im Auftrag des Bundesministeriums für Bildung, Familie, Senioren, Frauen und Jugend (BMBFSFJ) vorgenommen. Die inhaltliche Verantwortung liegt bei matrix gGmbH.
+            </p>
+            <img
+              src="/assets/foerderlogo.png"
+              alt="Gefördert vom Bundesministerium für Bildung, Familie, Senioren, Frauen und Jugend"
+              className="h-16 object-contain"
+            />
+          </div>
+
         </div>
       </div>
     </div>
   );
 };
- 
-// --- DATENSCHUTZ MODAL ---
+ // --- DATENSCHUTZ MODAL ---
 const DatenschutzModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
   return (
@@ -439,45 +462,145 @@ const DatenschutzModal = ({ isOpen, onClose }) => {
           </button>
         </div>
         <div className="overflow-y-auto max-h-[calc(85vh-64px)] px-6 py-6 text-gray-700 text-sm leading-relaxed space-y-4">
-          <h3 className="text-lg font-bold text-gray-800">1. Datenschutz auf einen Blick</h3>
-          <h4 className="font-semibold text-gray-800">Allgemeine Hinweise</h4>
-          <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können. Ausführliche Informationen zum Thema Datenschutz entnehmen Sie unserer unter diesem Text aufgeführten Datenschutzerklärung.</p>
-          <h4 className="font-semibold text-gray-800">Datenerfassung auf unserer Website</h4>
-          <p><span className="font-semibold">Wer ist verantwortlich für die Datenerfassung auf dieser Website?</span><br/>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.</p>
-          <p><span className="font-semibold">Wie erfassen wir Ihre Daten?</span><br/>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z. B. um Daten handeln, die Sie in ein Kontaktformular eingeben. Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem technische Daten (z. B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs). Die Erfassung dieser Daten erfolgt automatisch, sobald Sie unsere Website betreten.</p>
-          <p><span className="font-semibold">Wofür nutzen wir Ihre Daten?</span><br/>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten.</p>
-          <p><span className="font-semibold">Welche Rechte haben Sie bezüglich Ihrer Daten?</span><br/>Sie haben jederzeit das Recht unentgeltlich Auskunft über Herkunft, Empfänger und Zweck Ihrer gespeicherten personenbezogenen Daten zu erhalten. Sie haben außerdem ein Recht, die Berichtigung, Sperrung oder Löschung dieser Daten zu verlangen. Hierzu sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden. Des Weiteren steht Ihnen ein Beschwerderecht bei der zuständigen Aufsichtsbehörde zu.</p>
  
-          <h3 className="text-lg font-bold text-gray-800 mt-6">2. Allgemeine Hinweise und Pflichtinformationen</h3>
-          <h4 className="font-semibold text-gray-800">Datenschutz</h4>
-          <p>Die Betreiber dieser Seiten nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie dieser Datenschutzerklärung. Wir haben einen fachkundigen und zuverlässigen externen Datenschutzbeauftragten bestellt. Die externe Datenschutzbeauftragung wird von der UIMC Dr. Voßbein GmbH &amp; Co KG wahrgenommen (E-Mail: <a href="mailto:datenschutz.matrix@uimc.de" className="text-purple-600 hover:underline">datenschutz.matrix@uimc.de</a>).</p>
-          <p>Wenn Sie diese Website benutzen, werden verschiedene personenbezogene Daten erhoben. Personenbezogene Daten sind Daten, mit denen Sie persönlich identifiziert werden können. Die vorliegende Datenschutzerklärung erläutert, welche Daten wir erheben und wofür wir sie nutzen. Sie erläutert auch, wie und zu welchem Zweck das geschieht. Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.</p>
-          <h4 className="font-semibold text-gray-800">Hinweis zur verantwortlichen Stelle</h4>
-          <p>Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:</p>
-          <p>matrix Gesellschaft für Beratung in Wirtschaft, Politik und Verwaltung mbH &amp; Co. KG<br/>Rittergut Haus Morp<br/>Düsseldorfer Straße 16<br/>40699 Erkrath bei Düsseldorf</p>
-          <p>Kontakt:<br/>Telefon: 0211 75707-910<br/>Telefax: 0211 987300<br/>E-Mail: <a href="mailto:info@matrix-gmbh.de" className="text-purple-600 hover:underline">info@matrix-gmbh.de</a><br/>Website: <a href="https://www.matrix-gruppe.de" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">www.matrix-gruppe.de</a></p>
-          <p>Verantwortliche Stelle ist die natürliche oder juristische Person, die allein oder gemeinsam mit anderen über die Zwecke und Mittel der Verarbeitung von personenbezogenen Daten (z.B. Namen, E-Mail-Adressen o. Ä.) entscheidet.</p>
-          <h4 className="font-semibold text-gray-800">Widerruf Ihrer Einwilligung zur Datenverarbeitung</h4>
-          <p>Viele Datenverarbeitungsvorgänge sind nur mit Ihrer ausdrücklichen Einwilligung möglich. Sie können eine bereits erteilte Einwilligung jederzeit widerrufen. Dazu reicht eine formlose Mitteilung per E-Mail an uns. Die Rechtmäßigkeit der bis zum Widerruf erfolgten Datenverarbeitung bleibt vom Widerruf unberührt.</p>
-          <h4 className="font-semibold text-gray-800">Recht auf Datenübertragbarkeit</h4>
-          <p>Sie haben das Recht, Daten, die wir auf Grundlage Ihrer Einwilligung oder in Erfüllung eines Vertrags automatisiert verarbeiten, an sich oder an einen Dritten in einem gängigen, maschinenlesbaren Format aushändigen zu lassen. Sofern Sie die direkte Übertragung der Daten an einen anderen Verantwortlichen verlangen, erfolgt dies nur, soweit es technisch machbar ist.</p>
-          <h4 className="font-semibold text-gray-800">SSL- bzw. TLS-Verschlüsselung</h4>
-          <p>Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte, wie zum Beispiel Bestellungen oder Anfragen, die Sie an uns als Seitenbetreiber senden, eine SSL-bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile des Browsers von "http://" auf "https://" wechselt und an dem Schloss-Symbol in Ihrer Browserzeile. Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden.</p>
-          <h4 className="font-semibold text-gray-800">Auskunft, Sperrung, Löschung</h4>
-          <p>Sie haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger und den Zweck der Datenverarbeitung und ggf. ein Recht auf Berichtigung, Sperrung oder Löschung dieser Daten. Hierzu sowie zu weiteren Fragen zum Thema personenbezogene Daten können Sie sich jederzeit unter der im Impressum angegebenen Adresse an uns wenden.</p>
+          <p className="text-gray-500 text-xs">DiF-Check – KI fürs kritische Denken | Stand: Februar 2026</p>
+          <p className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs text-gray-600">
+            <strong>Kurzfassung:</strong> DiF-Check erfordert keine Registrierung und speichert keine personenbezogenen Daten dauerhaft. Alle Analyseergebnisse existieren nur während deiner aktiven Sitzung. Es gibt kein Tracking und kein Profiling. Die Datenverarbeitung erfolgt ausschließlich auf europäischen Servern.
+          </p>
  
-          <h3 className="text-lg font-bold text-gray-800 mt-6">3. Datenerfassung auf unserer Website</h3>
-          <h4 className="font-semibold text-gray-800">Server-Log-Dateien</h4>
-          <p>Der Provider der Seiten erhebt und speichert automatisch Informationen in so genannten Server-Log-Dateien, die Ihr Browser automatisch an uns übermittelt. Dies sind:</p>
+          {/* 1. Verantwortlicher */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">1. Verantwortlicher</h3>
+          <p>
+            matrix gGmbH<br/>
+            Düsseldorfer Straße 16<br/>
+            40699 Erkrath bei Düsseldorf<br/>
+            E-Mail: <a href="mailto:info@matrix-ggmbh.de" className="text-purple-600 hover:underline">info@matrix-ggmbh.de</a><br/>
+            Website: <a href="https://www.matrix-ggmbh.de" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">www.matrix-ggmbh.de</a>
+          </p>
+ 
+          {/* 2. Allgemeine Grundsätze */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">2. Allgemeine Grundsätze</h3>
+          <p>DiF-Check wurde nach dem Prinzip der Datensparsamkeit (Privacy by Design) entwickelt. Das bedeutet konkret:</p>
           <ul className="list-disc ml-5 space-y-1">
-            <li>Browsertyp und Browserversion</li>
-            <li>verwendetes Betriebssystem</li>
-            <li>Referrer URL</li>
-            <li>Hostname des zugreifenden Rechners</li>
-            <li>Uhrzeit der Serveranfrage</li>
-            <li>IP-Adresse</li>
+            <li>Keine Registrierung und kein Login erforderlich</li>
+            <li>Keine dauerhafte Speicherung personenbezogener Daten</li>
+            <li>Kein Tracking, keine Cookies zu Analysezwecken, kein Profiling</li>
+            <li>Alle Analyseergebnisse werden ausschließlich während der aktiven Sitzung vorgehalten und danach gelöscht</li>
+            <li>Hosting und Datenverarbeitung erfolgen ausschließlich innerhalb der Europäischen Union</li>
           </ul>
-          <p>Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen. Grundlage für die Datenverarbeitung ist Art. 6 Abs. 1 lit. f DSGVO, der die Verarbeitung von Daten zur Erfüllung eines Vertrags oder vorvertraglicher Maßnahmen gestattet.</p>
+ 
+          {/* 3. Welche Daten werden verarbeitet? */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">3. Welche Daten werden verarbeitet?</h3>
+ 
+          <h4 className="font-semibold text-gray-800">3.1 Automatisch erhobene Daten beim Seitenaufruf</h4>
+          <p>Beim Aufruf von DiF-Check werden die folgenden technisch notwendigen Daten durch den Webserver (Nginx) temporär verarbeitet:</p>
+          <ul className="list-disc ml-5 space-y-1">
+            <li>IP-Adresse (wird nicht dauerhaft gespeichert)</li>
+            <li>Datum und Uhrzeit des Zugriffs</li>
+            <li>Angefragter Inhalt (URL)</li>
+            <li>Browser-Typ und Betriebssystem (User-Agent)</li>
+            <li>Referrer-URL (sofern vom Browser übermittelt)</li>
+          </ul>
+          <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der technischen Bereitstellung und Sicherheit der Anwendung).</p>
+ 
+          <h4 className="font-semibold text-gray-800">3.2 Nutzereingaben im Faktencheck-Chatbot</h4>
+          <p>Wenn du Texte oder Bilder zur Analyse einreichst, werden diese Inhalte vorübergehend verarbeitet, um dir ein Analyseergebnis zu liefern. Dabei gilt:</p>
+          <ul className="list-disc ml-5 space-y-1">
+            <li>Die eingereichten Inhalte werden nur für die Dauer der Analyse verarbeitet.</li>
+            <li>Es erfolgt keine dauerhafte Speicherung deiner Eingaben.</li>
+            <li>Die Inhalte werden nicht für Trainingszwecke von KI-Modellen verwendet.</li>
+          </ul>
+          <p>Wir empfehlen, bei der Nutzung von DiF-Check möglichst keine personenbezogenen Daten einzugeben. Analysiere daher bevorzugt Texte und Bilder, die keine Rückschlüsse auf deine Person oder andere Personen ermöglichen.</p>
+          <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung durch aktive Nutzung des Tools) bzw. Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bereitstellung des Dienstes).</p>
+ 
+          <h4 className="font-semibold text-gray-800">3.3 Nutzereingaben in der Fake-News-Fabrik</h4>
+          <p>Die Fake-News-Fabrik erzeugt zu Lernzwecken KI-generierte Inhalte auf Basis deiner Eingaben. Auch diese Eingaben werden nur temporär verarbeitet und danach verworfen.</p>
+ 
+          {/* 4. Externe Dienste */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">4. Externe Dienste und Datenverarbeitung</h3>
+          <p>DiF-Check nutzt zur Bereitstellung der Analysefunktionen folgende externe Dienste:</p>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs border-collapse border border-gray-200 rounded-lg">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="border border-gray-200 px-3 py-2 text-left font-semibold">Dienst</th>
+                  <th className="border border-gray-200 px-3 py-2 text-left font-semibold">Zweck</th>
+                  <th className="border border-gray-200 px-3 py-2 text-left font-semibold">Datenverarbeitung</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-gray-200 px-3 py-2">IONOS AI (Meta-Llama-3.1, FLUX.1-schnell)</td>
+                  <td className="border border-gray-200 px-3 py-2">Textanalyse, Faktencheck, Bildgenerierung</td>
+                  <td className="border border-gray-200 px-3 py-2">EU-Server (IONOS SE, Deutschland). Kein Datenabfluss in Drittstaaten.</td>
+                </tr>
+                <tr className="bg-gray-50">
+                  <td className="border border-gray-200 px-3 py-2">Tavily</td>
+                  <td className="border border-gray-200 px-3 py-2">Automatisiertes Lateral Reading (Quellenabgleich über Websuche)</td>
+                  <td className="border border-gray-200 px-3 py-2">Die eingegebene Behauptung bzw. der zu prüfende Text wird als Suchanfrage weitergeleitet.</td>
+                </tr>
+                <tr>
+                  <td className="border border-gray-200 px-3 py-2">Sightengine</td>
+                  <td className="border border-gray-200 px-3 py-2">Erkennung von KI-generierten Bildern</td>
+                  <td className="border border-gray-200 px-3 py-2">Hochgeladene Bilder werden zur Analyse an die Sightengine-API übermittelt.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Für die Nutzung externer APIs werden ausschließlich die für die jeweilige Analyse notwendigen Inhalte übermittelt. Es werden keine personenbezogenen Daten wie Name, E-Mail-Adresse oder Standort an diese Dienste weitergegeben.</p>
+          <p className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+            <strong>Hinweis zum Drittlandtransfer:</strong> Bei der Nutzung von Tavily (Websuche) und Sightengine (Bildanalyse) kann eine Verarbeitung von Daten außerhalb der Europäischen Union stattfinden. Dies betrifft ausschließlich die zur Analyse übermittelten Inhalte (Suchanfragen bzw. Bilddaten). Das Textanalyse-Modell (IONOS AI / Meta-Llama) wird auf Servern in Deutschland betrieben; hier findet kein Drittlandtransfer statt. Wir empfehlen daher, bei der Bildanalyse und der Faktencheck-Funktion auf die Eingabe personenbezogener Daten zu verzichten.
+          </p>
+ 
+          {/* 5. Cookies */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">5. Cookies und Tracking</h3>
+          <p>DiF-Check verwendet keine Analyse-Cookies, keine Tracking-Technologien und keine Social-Media-Plugins. Es werden ausschließlich technisch notwendige Cookies verwendet, sofern diese für die Sitzungsverwaltung erforderlich sind.</p>
+ 
+          {/* 6. Hosting */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">6. Hosting</h3>
+          <p>DiF-Check wird auf europäischen Servern gehostet. Die Anwendung läuft in Docker-Containern und wird über Nginx als Reverse Proxy bereitgestellt. Alle Datenverarbeitungsvorgänge finden innerhalb der EU statt.</p>
+ 
+          {/* 7. Rechte */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">7. Rechte der betroffenen Personen</h3>
+          <p>Gemäß DSGVO hast du folgende Rechte:</p>
+          <ul className="list-disc ml-5 space-y-1">
+            <li><strong>Auskunftsrecht</strong> (Art. 15 DSGVO): Du kannst Auskunft über die Verarbeitung deiner Daten verlangen.</li>
+            <li><strong>Recht auf Berichtigung</strong> (Art. 16 DSGVO): Du kannst die Berichtigung unrichtiger Daten verlangen.</li>
+            <li><strong>Recht auf Löschung</strong> (Art. 17 DSGVO): Du kannst die Löschung deiner Daten verlangen.</li>
+            <li><strong>Recht auf Einschränkung der Verarbeitung</strong> (Art. 18 DSGVO)</li>
+            <li><strong>Recht auf Datenübertragbarkeit</strong> (Art. 20 DSGVO)</li>
+            <li><strong>Widerspruchsrecht</strong> (Art. 21 DSGVO): Du kannst der Verarbeitung jederzeit widersprechen.</li>
+          </ul>
+          <p>Da DiF-Check keine personenbezogenen Daten dauerhaft speichert, sind diese Rechte in der Praxis eingeschränkt anwendbar. Für Anfragen wende dich bitte an die oben genannte Kontaktadresse.</p>
+ 
+          {/* 8. Beschwerderecht */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">8. Beschwerderecht</h3>
+          <p>Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Zuständig ist:</p>
+          <p>
+            Landesbeauftragte für Datenschutz und Informationsfreiheit Nordrhein-Westfalen<br/>
+            Kavalleriestraße 2–4<br/>
+            40213 Düsseldorf<br/>
+            Website: <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">www.ldi.nrw.de</a>
+          </p>
+ 
+          {/* 9. Minderjährige */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">9. Besondere Hinweise für Minderjährige</h3>
+          <p>DiF-Check richtet sich an Jugendliche ab 14 Jahren und wurde speziell für den Einsatz in Bildungskontexten entwickelt. Das Tool wurde so konzipiert, dass es ohne Einwilligung der Erziehungsberechtigten genutzt werden kann, da keine personenbezogenen Daten dauerhaft erhoben oder gespeichert werden. Im Rahmen von Workshop-Settings liegt die datenschutzrechtliche Verantwortung bei der durchführenden Bildungseinrichtung.</p>
+ 
+          {/* 10. Änderungen */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">10. Änderungen dieser Datenschutzerklärung</h3>
+          <p>Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, beispielsweise bei Änderungen der Funktionalität oder der rechtlichen Rahmenbedingungen. Die aktuelle Version ist stets über das DiF-Check-Tool abrufbar.</p>
+ 
+          {/* 11. Datenschutzbeauftragter */}
+          <h3 className="text-lg font-bold text-gray-800 mt-6">11. Externer Datenschutzbeauftragter</h3>
+          <p>
+            Der externe Datenschutzbeauftragte ist erreichbar<br/><br/>
+            per Post: Dr. Jörn Voßbein, UIMC DR. VOSSBEIN GmbH &amp; Co KG, Otto-Hausmann-Ring 113, 42115 Wuppertal, <a href="https://www.uimc.de/datenschutz" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:underline">www.uimc.de/datenschutz</a><br/>
+            per Telefon: +49 202 946 7726 200<br/>
+            per Mail: <a href="mailto:consultants@uimc.de" className="text-purple-600 hover:underline">consultants@uimc.de</a>
+          </p>
+ 
+          <p className="text-gray-400 text-xs mt-6">Stand: Februar 2026 | matrix gGmbH, Erkrath</p>
         </div>
       </div>
     </div>
@@ -2089,24 +2212,6 @@ const LernenView = () => {
             thumbnail: "📰",
             videoId: "cxPclzAmnN8",
             embedUrl: "https://www.youtube.com/embed/cxPclzAmnN8"
-        },
-        {
-            id: 4,
-            title: "KI vs Realität: Videos beweisen nichts mehr",
-            description: "ZAPP | NDR - Deepfakes und ihre Gefahren",
-            duration: "6:31",
-            thumbnail: "🎭",
-            videoId: "tXsORfMcVyw",
-            embedUrl: "https://www.youtube.com/embed/tXsORfMcVyw"
-        },
-        {
-            id: 5,
-            title: "Aufklärung rund um Künstliche Intelligenz",
-            description: "KI, Fakenews und was du wissen solltest",
-            duration: "5:15",
-            thumbnail: "💡",
-            videoId: "gwfbAnPT8gs",
-            embedUrl: "https://www.youtube.com/embed/gwfbAnPT8gs"
         }
     ];
 
@@ -2668,7 +2773,7 @@ const LernenView = () => {
                                     />
                                 ))}
                             </div>
-                            {/* 🆕 Externe Übungs-Quizzes Sektion */}
+{/* 🆕 Externe Übungs-Quizzes Sektion */}
 <div className="mt-12">
     <div className="mb-6">
         <h3 className="text-2xl font-bold text-gray-800 mb-2">
@@ -2750,6 +2855,117 @@ const LernenView = () => {
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3 border-l-4 border-blue-400">
                 <p className="text-xs text-gray-700">
                     <strong>🌐 Öffnet in neuem Tab</strong> · Erkenne KI-generierte Gesichter
+                </p>
+            </div>
+        </a>
+
+        {/* Sightengine: Which Image Is AI */}
+        <a
+            href="https://sightengine.com/which-image-is-ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group"
+        >
+            <div className="flex items-start mb-4">
+                <div className="text-5xl mr-4 group-hover:scale-110 transition-transform">🖼️</div>
+                <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 text-xl mb-2 group-hover:text-purple-600 transition-colors">
+                        Which Image Is AI?
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                        Welches Bild wurde von KI erstellt? Teste dein Erkennungsvermögen
+                    </p>
+                    <div className="flex items-center space-x-4 text-sm mb-3">
+                        <span className="text-gray-500">🎯 Interaktiv</span>
+                        <span className="px-2 py-1 rounded bg-orange-100 text-orange-700 text-xs font-medium">
+                            Mittel
+                        </span>
+                    </div>
+                    <div className="flex items-center text-purple-600 font-medium text-sm group-hover:translate-x-2 transition-transform">
+                        <span>Quiz starten</span>
+                        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg p-3 border-l-4 border-orange-400">
+                <p className="text-xs text-gray-700">
+                    <strong>🌐 Öffnet in neuem Tab</strong> · KI-Bilder im direkten Vergleich erkennen
+                </p>
+            </div>
+        </a>
+
+        {/* Sightengine: AI or Not */}
+        <a
+            href="https://sightengine.com/ai-or-not?version=2024Q3"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group"
+        >
+            <div className="flex items-start mb-4">
+                <div className="text-5xl mr-4 group-hover:scale-110 transition-transform">🤔</div>
+                <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 text-xl mb-2 group-hover:text-purple-600 transition-colors">
+                        AI or Not?
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                        Echt oder KI-generiert? Bewerte Bilder und lerne die Unterschiede kennen
+                    </p>
+                    <div className="flex items-center space-x-4 text-sm mb-3">
+                        <span className="text-gray-500">🧠 Herausfordernd</span>
+                        <span className="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-medium">
+                            Schwer
+                        </span>
+                    </div>
+                    <div className="flex items-center text-purple-600 font-medium text-sm group-hover:translate-x-2 transition-transform">
+                        <span>Quiz starten</span>
+                        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 border-l-4 border-purple-400">
+                <p className="text-xs text-gray-700">
+                    <strong>🌐 Öffnet in neuem Tab</strong> · Aktuelle KI-Bilder aus 2024 erkennen
+                </p>
+            </div>
+        </a>
+
+        {/* Sightengine: AI or Not Video */}
+        <a
+            href="https://sightengine.com/ai-or-not-video"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-white rounded-xl shadow-lg p-6 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer group"
+        >
+            <div className="flex items-start mb-4">
+                <div className="text-5xl mr-4 group-hover:scale-110 transition-transform">🎬</div>
+                <div className="flex-1">
+                    <h4 className="font-bold text-gray-800 text-xl mb-2 group-hover:text-purple-600 transition-colors">
+                        AI or Not? – Video
+                    </h4>
+                    <p className="text-sm text-gray-600 mb-3">
+                        Erkennst du KI-generierte Videos? Die nächste Stufe der Erkennung
+                    </p>
+                    <div className="flex items-center space-x-4 text-sm mb-3">
+                        <span className="text-gray-500">🎥 Video-Quiz</span>
+                        <span className="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-medium">
+                            Schwer
+                        </span>
+                    </div>
+                    <div className="flex items-center text-purple-600 font-medium text-sm group-hover:translate-x-2 transition-transform">
+                        <span>Quiz starten</span>
+                        <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg p-3 border-l-4 border-gray-400">
+                <p className="text-xs text-gray-700">
+                    <strong>🌐 Öffnet in neuem Tab</strong> · KI-Videos von echten Videos unterscheiden
                 </p>
             </div>
         </a>
@@ -3593,19 +3809,18 @@ const KICategory = ({ openFAQ, setOpenFAQ }) => {
     const faqs = [
         { q: "Was ist Künstliche Intelligenz?", a: "KI ist ein Computerprogramm, das Aufgaben erledigt, die normalerweise menschliches Denken erfordern. KI kann lernen, Muster erkennen und Entscheidungen treffen." },
         { q: "Kann KI denken wie ein Mensch?", a: "Nein! KI kann Muster erkennen und Vorhersagen treffen, aber sie hat kein Bewusstsein, keine Gefühle und versteht nicht wirklich, was sie tut." },
-        { q: "Was ist generative KI?", a: "Generative KI erstellt neue Inhalte – Texte, Bilder, Videos. ChatGPT ist ein 'Large Language Model', das menschenähnliche Texte schreiben kann." },
+        { q: "Was ist generative KI?", a: "Generative KI erstellt neue Inhalte – Texte, Bilder, Videos. ChatGPT ist ein sogenanntes Large Language Model, das menschenähnliche Texte schreiben kann." },
         { q: "Ist KI gefährlich?", a: "Die echten Risiken sind: Bias (Vorurteile), Diskriminierung, Privatsphäre-Probleme und Fehlinformationen. Deshalb ist verantwortungsvolle Entwicklung wichtig." },
-        { q: "Was ist der Unterschied zwischen schwacher und starker KI?", a: "Schwache KI (Narrow AI) ist spezialisiert auf eine Aufgabe (z.B. Spracherkennung, Schach). Starke KI (General AI) könnte theoretisch wie ein Mensch denken – existiert aber noch nicht!" },
-        { q: "Wie lernt eine KI?", a: "Training mit Daten: Du zeigst der KI tausende Beispiele (z.B. Katzenbilder). Die KI findet Muster und Gemeinsamkeiten. Dann kann sie neue Katzen erkennen – das ist Machine Learning!" },
-        { q: "Wer kontrolliert KI?", a: "Das ist kompliziert! Entwicklerfirmen tragen Verantwortung. Regierungen arbeiten an Gesetzen (z.B. EU AI Act). Aber: Perfekte Kontrolle gibt's nicht. Deshalb ist kritisches Denken so wichtig!" },
-        { q: "Kostet KI Arbeitsplätze?", a: "Manche Jobs ändern sich, neue entstehen. KI übernimmt Routineaufgaben. Aber: Kreativität, Empathie, ethische Entscheidungen kann KI (noch) nicht ersetzen!" },
-        { q: "Was ist Bias in der KI?", a: "Wenn die Trainingsdaten voreingenommen sind (z.B. nur weiße Männer in Führungsrollen), übernimmt die KI diese Vorurteile. Das kann zu Diskriminierung führen!" },
-        { q: "Wie kann ich KI sinnvoll nutzen?", a: "Als Werkzeug, nicht als Wahrheitsmaschine! KI kann beim Lernen helfen, Ideen generieren, Recherche unterstützen. Aber: Immer kritisch prüfen und selbst denken!" }
+        { q: "Was ist der Unterschied zwischen schwacher und starker KI?", a: "Schwache KI (Narrow AI) ist auf eine Aufgabe spezialisiert, zum Beispiel Spracherkennung oder Schach. Starke KI (General AI) könnte theoretisch wie ein Mensch denken – existiert aber noch nicht." },
+        { q: "Wie lernt eine KI?", a: "Durch Training mit Daten: Die KI bekommt tausende Beispiele gezeigt, etwa Katzenbilder. Sie findet Muster und Gemeinsamkeiten und kann danach neue Katzen erkennen. Das nennt man Machine Learning." },
+        { q: "Wer kontrolliert KI?", a: "Entwicklerfirmen tragen Verantwortung. Regierungen arbeiten an Gesetzen, zum Beispiel dem EU AI Act. Perfekte Kontrolle gibt es aber nicht – deshalb ist kritisches Denken so wichtig." },
+        { q: "Kostet KI Arbeitsplätze?", a: "Manche Jobs ändern sich, neue entstehen. KI übernimmt Routineaufgaben. Kreativität, Empathie und ethische Entscheidungen kann KI aber nicht ersetzen." },
+        { q: "Was ist Bias in der KI?", a: "Wenn die Trainingsdaten voreingenommen sind, zum Beispiel nur weiße Männer in Führungsrollen zeigen, übernimmt die KI diese Vorurteile. Das kann zu Diskriminierung führen." },
+        { q: "Wie kann ich KI sinnvoll nutzen?", a: "Als Werkzeug, nicht als Wahrheitsmaschine! KI kann beim Lernen helfen, Ideen generieren und Recherche unterstützen. Aber: Ergebnisse immer kritisch prüfen und selbst denken." }
     ];
 
     return (
         <div>
-            {/* Info Block */}
             <div className="mb-8 pb-8 border-b-2 border-gray-200">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">🤖 Was ist KI?</h3>
                 <p className="text-gray-700 mb-4">
@@ -3623,7 +3838,6 @@ const KICategory = ({ openFAQ, setOpenFAQ }) => {
                 </div>
             </div>
 
-            {/* FAQ Section */}
             <h4 className="text-xl font-bold text-gray-800 mb-4">❓ Häufige Fragen zu KI</h4>
             <FAQList faqs={faqs} openFAQ={openFAQ} setOpenFAQ={setOpenFAQ} />
         </div>
@@ -3636,20 +3850,19 @@ const KICategory = ({ openFAQ, setOpenFAQ }) => {
 const FakeNewsCategory = ({ openFAQ, setOpenFAQ }) => {
     const faqs = [
         { q: "Was sind Fake News?", a: "Absichtlich falsche oder irreführende Informationen, die als echte Nachrichten verbreitet werden. Ziel: Menschen täuschen, Meinungen manipulieren." },
-        { q: "Warum verbreiten sich Fake News so schnell?", a: "Weil sie emotional sind! Wut, Angst, Schock machen uns unkritisch. Social Media macht Teilen super einfach." },
-        { q: "Was sind Deepfakes?", a: "KI-generierte Videos oder Audios, die täuschend echt aussehen. Sehr gefährlich für Politik und Demokratie!" },
+        { q: "Warum verbreiten sich Fake News so schnell?", a: "Weil sie emotional sind. Wut, Angst und Schock machen uns unkritisch. Social Media macht Teilen außerdem sehr einfach." },
+        { q: "Was sind Deepfakes?", a: "KI-generierte Videos oder Audios, die täuschend echt aussehen. Sie sind besonders gefährlich für Politik und Demokratie." },
         { q: "Was sind Social Bots?", a: "Automatisierte Fake-Accounts, die wie Menschen posten. Sie verbreiten Desinformation und manipulieren Diskussionen." },
-        { q: "Wie erkenne ich Fake News?", a: "3-Schritte-Check: 1) Stimmt die Behauptung? (andere Quellen prüfen) 2) Wer steckt dahinter? (Quelle checken) 3) Manipuliert die Nachricht? (Emotion, Kontext prüfen)" },
-        { q: "Warum gibt es Fake News?", a: "Gründe: Geld (Klicks = Werbeeinnahmen), politische Manipulation (Meinung beeinflussen), Spaß/Trolle. Manchmal auch Unwissenheit – nicht jede Falschmeldung ist böse gemeint!" },
-        { q: "Was sind Filter Bubbles?", a: "Social Media zeigt dir vor allem Inhalte, die deiner Meinung entsprechen. Du siehst nur, was dir gefällt. Problem: Einseitige Weltbilder, keine anderen Perspektiven!" },
-        { q: "Sind alle Medien lügend?", a: "NEIN! Seriöse Medien (z.B. ARD, Süddeutsche) arbeiten nach journalistischen Standards. Fehler passieren, aber sie korrigieren diese. Fake News tun das nicht!" },
-        { q: "Darf ich Fake News teilen?", a: "NEIN! Auch wenn du 'nur Fragen stellst' oder es 'interessant findest' – Teilen verbreitet Desinformation. Erst checken, dann teilen!" },
-        { q: "Was kann ich gegen Fake News tun?", a: "1) Nicht ungeprüft teilen 2) Faktencheck-Seiten nutzen 3) Quellen hinterfragen 4) Andere aufklären 5) Falschmeldungen melden" }
+        { q: "Wie erkenne ich Fake News?", a: "3-Schritte-Check: 1) Stimmt die Behauptung? (andere Quellen prüfen) 2) Wer steckt dahinter? (Quelle checken) 3) Manipuliert die Nachricht? (Emotion und Kontext prüfen)" },
+        { q: "Warum gibt es Fake News?", a: "Gründe: Geld (Klicks = Werbeeinnahmen), politische Manipulation, aber auch Unwissenheit – nicht jede Falschmeldung ist böse gemeint." },
+        { q: "Was sind Filter Bubbles?", a: "Social Media zeigt dir vor allem Inhalte, die deiner Meinung entsprechen. Problem: Du siehst nur, was dir gefällt – das führt zu einseitigen Weltbildern." },
+        { q: "Sind alle Medien unzuverlässig?", a: "Nein! Seriöse Medien wie ARD oder die Süddeutsche Zeitung arbeiten nach journalistischen Standards. Fehler passieren, aber sie werden korrigiert. Fake News tun das nicht." },
+        { q: "Darf ich Fake News teilen?", a: "Besser nicht – auch wenn du es nur interessant findest oder Fragen stellst. Teilen verbreitet Desinformation weiter. Erst prüfen, dann teilen." },
+        { q: "Was kann ich gegen Fake News tun?", a: "1) Nicht ungeprüft teilen 2) Faktencheck-Seiten nutzen 3) Quellen hinterfragen 4) Andere aufklären 5) Falschmeldungen auf der jeweiligen Plattform melden" }
     ];
 
     return (
         <div>
-            {/* Info Block */}
             <div className="mb-8 pb-8 border-b-2 border-gray-200">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">🎭 Was sind Fake News?</h3>
                 <p className="text-gray-700 mb-4">
@@ -3659,11 +3872,11 @@ const FakeNewsCategory = ({ openFAQ, setOpenFAQ }) => {
                     <div className="bg-red-50 rounded-lg p-4">
                         <h4 className="font-bold text-red-800 mb-2">⚠️ Warnsignale</h4>
                         <ul className="text-sm text-red-700 space-y-1">
-                            <li>• GROSSBUCHSTABEN!!!</li>
-                            <li>• Viele Emojis 😱😱😱</li>
-                            <li>• "UNGLAUBLICH!", "SCHOCK!"</li>
+                            <li>• GROSSBUCHSTABEN</li>
+                            <li>• Viele Ausrufezeichen</li>
+                            <li>• Schlagwörter wie "UNGLAUBLICH!" oder "SCHOCK!"</li>
                             <li>• Keine Quellenangabe</li>
-                            <li>• Emotionale Sprache</li>
+                            <li>• Stark emotionale Sprache</li>
                         </ul>
                     </div>
                     <div className="bg-green-50 rounded-lg p-4">
@@ -3679,7 +3892,6 @@ const FakeNewsCategory = ({ openFAQ, setOpenFAQ }) => {
                 </div>
             </div>
 
-            {/* FAQ Section */}
             <h4 className="text-xl font-bold text-gray-800 mb-4">❓ Häufige Fragen zu Fake News</h4>
             <FAQList faqs={faqs} openFAQ={openFAQ} setOpenFAQ={setOpenFAQ} />
         </div>
@@ -3691,20 +3903,18 @@ const FakeNewsCategory = ({ openFAQ, setOpenFAQ }) => {
 // ======================
 const FaktencheckCategory = ({ openFAQ, setOpenFAQ }) => {
     const faqs = [
-        { q: "Wie funktioniert DiF-Check?", a: "DiF-Check nutzt KI, um Texte auf Desinformations-Merkmale zu prüfen. Es bewertet nach 4 Dimensionen: Quelle, Emotion, Evidenz, Kontext." },
-        { q: "Was bedeuten die 4 Dimensionen?", a: "Quelle (Wer steckt dahinter?), Emotion (Wie emotional ist es?), Evidenz (Gibt es Belege?), Kontext (Wird etwas weggelassen?)." },
-        { q: "Ist DiF-Check 100% genau?", a: "Nein! DiF-Check ist ein Hilfsmittel. Die finale Entscheidung liegt bei dir. Nutze zusätzlich andere Faktencheck-Seiten." },
-        { q: "Was ist das Mirko-Lange-Modell?", a: "Ein Bewertungsmodell für Desinformation mit 4 Dimensionen. Entwickelt von Kommunikationsexperte Mirko Lange." },
-        { q: "Warum ist die Quelle wichtig?", a: "Wer verbreitet die Info? Ist es eine seriöse Quelle (z.B. ARD) oder eine unbekannte Website ohne Impressum?" },
-        { q: "Was ist emotionale Manipulation?", a: "Wenn Texte GROSSBUCHSTABEN, viele !!!, Schock-Wörter nutzen. Ziel: Du sollst nicht nachdenken, sondern emotional reagieren!" },
-        { q: "Was bedeutet Evidenz?", a: "Gibt es Beweise? Werden Studien, Experten, Originalquellen genannt? Oder ist es nur Behauptung ohne Belege?" },
-        { q: "Warum ist Kontext wichtig?", a: "Wird etwas weggelassen? Ist ein Zitat aus dem Zusammenhang gerissen? Passt das Bild zum Text? Fehlender Kontext = Manipulation!" },
-        { q: "Wie mache ich einen guten Faktencheck?", a: "1) Quelle checken (Impressum, Reputation) 2) Google Bildersuche (bei Fotos) 3) Andere Quellen suchen (berichten seriöse Medien auch?) 4) Faktencheck-Websites nutzen (CORRECTIV, Mimikama)" }
+        { q: "Wie funktioniert DiF-Check?", a: "DiF-Check nutzt KI, um Texte auf Desinformations-Merkmale zu prüfen. Es bewertet nach 4 Dimensionen: Quelle, Emotion, Evidenz und Kontext. Für die Textanalyse wird das Sprachmodell Meta-Llama (IONOS AI) genutzt, für Websuchen Tavily und für die Bilderkennung Sightengine." },
+        { q: "Was bedeuten die 4 Dimensionen?", a: "Quelle (Wer steckt dahinter?), Emotion (Wie emotional ist der Text?), Evidenz (Gibt es Belege?) und Kontext (Wird etwas weggelassen oder verzerrt?)." },
+        { q: "Was ist das Mirko-Lange-Modell?", a: "Ein wissenschaftlich fundiertes Bewertungsmodell für Desinformation mit 4 Dimensionen, entwickelt vom Kommunikationsexperten Mirko Lange. DiF-Check nutzt dieses Modell als Grundlage für die KI-Analyse." },
+        { q: "Warum ist die Quelle wichtig?", a: "Wer verbreitet die Info? Ist es eine seriöse Quelle wie ARD oder eine unbekannte Website ohne Impressum? Die Quelle gibt oft schon viel preis." },
+        { q: "Was ist emotionale Manipulation?", a: "Wenn Texte mit Großbuchstaben, vielen Ausrufezeichen oder Schock-Wörtern arbeiten, sollen sie eine emotionale Reaktion auslösen – damit du nicht nachenkst, sondern sofort reagierst." },
+        { q: "Was bedeutet Evidenz?", a: "Gibt es Beweise? Werden Studien, Experten oder Originalquellen genannt? Oder handelt es sich um bloße Behauptungen ohne Belege?" },
+        { q: "Warum ist Kontext wichtig?", a: "Wird etwas weggelassen? Ist ein Zitat aus dem Zusammenhang gerissen? Passt das Bild zum Text? Fehlender oder verfälschter Kontext ist eine häufige Manipulationsstrategie." },
+        { q: "Wie mache ich einen guten Faktencheck?", a: "1) Quelle prüfen (Impressum, Reputation) 2) Umgekehrte Bildersuche bei Fotos 3) Andere Quellen suchen (berichten seriöse Medien auch darüber?) 4) Faktencheck-Seiten nutzen (z.B. CORRECTIV, Mimikama)" }
     ];
 
     return (
         <div>
-            {/* Info Block */}
             <div className="mb-8 pb-8 border-b-2 border-gray-200">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">🔍 Die 4 Dimensionen des Faktenchecks</h3>
                 <p className="text-gray-700 mb-4">
@@ -3720,22 +3930,21 @@ const FaktencheckCategory = ({ openFAQ, setOpenFAQ }) => {
                     <DimensionCard
                         icon="😠"
                         title="2. Emotion (20%)"
-                        items={["GROSSBUCHSTABEN?", "Viele !!!?", "SCHOCK-Wörter?", "Wut/Angst geschürt?"]}
+                        items={["Großbuchstaben?", "Viele Ausrufezeichen?", "Schock-Wörter?", "Wut oder Angst geschürt?"]}
                     />
                     <DimensionCard
                         icon="🔍"
                         title="3. Evidenz (30%)"
-                        items={["Quellen genannt?", "Studien/Experten?", "Fakten prüfbar?", "Originalquellen?"]}
+                        items={["Quellen genannt?", "Studien oder Experten?", "Fakten prüfbar?", "Originalquellen vorhanden?"]}
                     />
                     <DimensionCard
                         icon="🌍"
                         title="4. Kontext (20%)"
-                        items={["Zeit eingeordnet?", "Etwas weggelassen?", "Einseitig?", "Bild passt zum Text?"]}
+                        items={["Zeitlich eingeordnet?", "Etwas weggelassen?", "Einseitige Darstellung?", "Bild passt zum Text?"]}
                     />
                 </div>
             </div>
 
-            {/* FAQ Section */}
             <h4 className="text-xl font-bold text-gray-800 mb-4">❓ Häufige Fragen zum Faktencheck</h4>
             <FAQList faqs={faqs} openFAQ={openFAQ} setOpenFAQ={setOpenFAQ} />
         </div>
@@ -3747,36 +3956,58 @@ const FaktencheckCategory = ({ openFAQ, setOpenFAQ }) => {
 // ======================
 const ToolCategory = ({ openFAQ, setOpenFAQ }) => {
     const faqs = [
-        { q: "Wie funktioniert DiF-Check?", a: "DiF-Check nutzt KI, um Texte auf Desinformations-Merkmale zu prüfen. Es bewertet nach 4 Dimensionen: Quelle, Emotion, Evidenz, Kontext." },
-        { q: "Ist DiF-Check kostenlos?", a: "Ja! DiF-Check ist ein kostenloses Bildungstool für Jugendliche und Schulen." },
-        { q: "Brauche ich einen Account?", a: "Nein! Du kannst DiF-Check direkt nutzen – keine Registrierung nötig." },
-        { q: "Speichert DiF-Check meine Daten?", a: "Nein! Deine Eingaben werden nicht gespeichert. Datenschutz ist uns wichtig." },
-        { q: "Kann ich DiF-Check in der Schule nutzen?", a: "Ja! DiF-Check ist speziell für Bildungszwecke entwickelt. Perfekt für Unterricht und Workshops." },
-        { q: "Gibt es DiF-Check als App?", a: "Aktuell nur als Website. Eine App ist in Planung!" }
+        { 
+            q: "Wie funktioniert DiF-Check?", 
+            a: "DiF-Check verbindet mehrere KI-Dienste: Das Sprachmodell Meta-Llama (IONOS AI) analysiert Texte nach dem Mirko-Lange-Modell, Tavily sucht automatisch nach Gegenquellen im Web (Lateral Reading), und Sightengine erkennt, ob ein Bild KI-generiert wurde. Die Fake-News-Fabrik nutzt ebenfalls IONOS AI und den Bildgenerator FLUX.1." 
+        },
+        { 
+            q: "Ist DiF-Check zuverlässig?", 
+            a: "DiF-Check ist ein Prototyp, der im Rahmen eines Pilotprojekts entwickelt und erprobt wurde. Die KI-Analyse bietet eine fundierte erste Einschätzung, ersetzt aber keine abschließende menschliche Beurteilung. Wir haben eine Reihe von Weiterentwicklungen identifiziert – darunter Bias-Erkennung, Texterkennung auf Bildern, differenzierte Analyse mehrerer Textabschnitte und KI-Texterkennung – die das Tool perspektivisch deutlich leistungsfähiger machen würden. Bis dahin gilt: DiF-Check als Einstieg und Hilfsmittel nutzen und das Ergebnis immer mit anderen Quellen abgleichen." 
+        },
+        { 
+            q: "Ist DiF-Check kostenlos?", 
+            a: "Ja, DiF-Check ist ein kostenloses Bildungsangebot für Jugendliche und außerschulische Bildungseinrichtungen." 
+        },
+        { 
+            q: "Brauche ich einen Account?", 
+            a: "Nein! DiF-Check kann direkt genutzt werden – ohne Registrierung und ohne Login." 
+        },
+        { 
+            q: "Speichert DiF-Check meine Daten?", 
+            a: "Nein. Eingaben werden nicht dauerhaft gespeichert und nicht für das Training von KI-Modellen verwendet. Alle Analyseergebnisse existieren nur während der aktiven Sitzung. Hinweis: Bei der Bildanalyse (Sightengine) und der Websuche (Tavily) kann eine Datenverarbeitung außerhalb der EU stattfinden." 
+        },
+        { 
+            q: "Wo kann ich DiF-Check einsetzen?", 
+            a: "DiF-Check ist für den Einsatz an außerschulischen Lernorten entwickelt worden – zum Beispiel in Jugendeinrichtungen, Medienzentren oder Bildungsworkshops. Eine Workshopanleitung steht im Ressourcenbereich zum Download bereit." 
+        },
+        { 
+            q: "Welche Funktionen hat DiF-Check?", 
+            a: "Faktencheck-Chatbot (Textanalyse und Bilderkennung), Fake-News-Fabrik (interaktives Erstellen von Desinformation zum Verstehen der Mechanismen), Lernbereich (Videos, Quizzes, Reflexion zur eigenen Mediennutzung) und Ressourcenbereich (Tools, Links, Workshopanleitung)." 
+        }
     ];
 
     return (
         <div>
-            {/* Info Block */}
             <div className="mb-8 pb-8 border-b-2 border-gray-200">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">🛠️ Über DiF-Check</h3>
                 <p className="text-gray-700 mb-4">
-                    DiF-Check ist ein kostenloses KI-Tool zur Analyse von Desinformation. Entwickelt von der 
-                    <strong> matrix gGmbH</strong> im Rahmen des Projekts <strong>"Demokratie im Feed"</strong>.
+                    DiF-Check ist ein kostenloses KI-gestütztes Werkzeug zur Analyse von Desinformation. Entwickelt von der{' '}
+                    <strong>matrix gGmbH</strong> im Rahmen des Pilotprojekts <strong>„DiF-Check – KI fürs kritische Denken an außerschulischen Lernorten"</strong>, gefördert über die VDI/VDE Innovation + Technik GmbH.
                 </p>
                 <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-5">
-                    <h4 className="font-bold text-gray-800 mb-3">🎯 Features:</h4>
+                    <h4 className="font-bold text-gray-800 mb-3">🎯 Funktionen:</h4>
                     <ul className="space-y-2 text-gray-700">
-                        <li>✓ <strong>Faktencheck-Chatbot:</strong> Analysiere Texte mit KI</li>
-                        <li>✓ <strong>Fake News Fabrik:</strong> Lerne wie Desinformation entsteht</li>
-                        <li>✓ <strong>Lernvideos & Quizzes:</strong> Trainiere deine Medienkompetenz</li>
-                        <li>✓ <strong>Reflexion:</strong> Check deine Social Media Nutzung</li>
-                        <li>✓ <strong>Ressourcen:</strong> Tools, Podcasts, Dokus</li>
+                        <li>✓ <strong>Faktencheck-Chatbot:</strong> Analysiere Texte und Bilder mit KI</li>
+                        <li>✓ <strong>Fake-News-Fabrik:</strong> Verstehe, wie Desinformation entsteht</li>
+                        <li>✓ <strong>Lernbereich:</strong> Videos, Quizzes und Reflexion zur eigenen Medienkompetenz</li>
+                        <li>✓ <strong>Ressourcen:</strong> Tools, weiterführende Links und Workshopanleitung</li>
                     </ul>
+                </div>
+                <div className="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
+                    <strong>Hinweis:</strong> DiF-Check ist ein Prototyp. Die KI-Analyse bietet eine fundierte erste Einschätzung – sie ersetzt aber keine abschließende Überprüfung durch dich. Nutze das Tool als Einstieg und gleiche Ergebnisse mit anderen Quellen ab.
                 </div>
             </div>
 
-            {/* FAQ Section */}
             <h4 className="text-xl font-bold text-gray-800 mb-4">❓ Häufige Fragen zum Tool</h4>
             <FAQList faqs={faqs} openFAQ={openFAQ} setOpenFAQ={setOpenFAQ} />
         </div>
