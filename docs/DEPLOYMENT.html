@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deployment-Dokumentation (Getting Started)</title>
+<style>
+:root { --fg:#1f2328; --muted:#59636e; --border:#d1d9e0; --bg:#ffffff;
+        --code-bg:#f6f8fa; --accent:#0969da; --quote:#8250df; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+       color: var(--fg); background: #eef1f4; margin: 0; padding: 2rem 1rem; line-height: 1.6; }
+main { max-width: 920px; margin: 0 auto; background: var(--bg); padding: 3rem 3.5rem;
+       border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+h1 { font-size: 1.9rem; border-bottom: 2px solid var(--border); padding-bottom: .4em; margin-top: 0; }
+h2 { font-size: 1.45rem; border-bottom: 1px solid var(--border); padding-bottom: .3em; margin-top: 2.2em; }
+h3 { font-size: 1.15rem; margin-top: 1.8em; }
+h4 { font-size: 1rem; margin-top: 1.5em; }
+p, li { font-size: .95rem; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background: var(--code-bg); padding: .15em .4em; border-radius: 5px;
+       font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: .85em; }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1rem 1.2rem; overflow-x: auto; line-height: 1.45; }
+pre code { background: none; padding: 0; font-size: .82rem; white-space: pre; }
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: .88rem; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--border); padding: .55em .8em; text-align: left; vertical-align: top; }
+th { background: var(--code-bg); font-weight: 600; }
+tr:nth-child(even) td { background: #fafbfc; }
+blockquote { border-left: 4px solid var(--quote); background: #faf8ff; margin: 1.2em 0;
+             padding: .6em 1.1em; color: #3d3352; border-radius: 0 6px 6px 0; }
+blockquote code { background: #efe9fb; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2.2em 0; }
+ul, ol { padding-left: 1.6em; }
+li { margin: .25em 0; }
+.doc-meta { color: var(--muted); font-size: .8rem; margin: -1.5em 0 2em; }
+</style>
+</head>
+<body>
+<main>
+<h1>Deployment-Dokumentation (Getting Started)</h1>
+<p><strong>Projekt:</strong> DiF-Check / „Fake Checker" (Demokratie im Feed) <strong>Zielgruppe dieses Dokuments:</strong> Entwickler:innen / DevOps, die das System auf der IONOS-VM in Betrieb nehmen.</p>
+<blockquote><strong>Sicherheitshinweis:</strong> Die Datei <code>.env</code> im Projekt-Root enthält <strong>echte, gültige Secrets</strong> (IONOS-JWT, Tavily-Key, Sightengine-Credentials). Sie ist korrekt über <code>.gitignore</code> ausgeschlossen, liegt aber im Klartext auf der VM. In diesem Dokument werden ausschließlich <strong>Variablennamen</strong> verwendet, niemals Werte. Secrets nicht ins Repository committen.</blockquote>
+<hr>
+<h2>1. Überblick der Architektur</h2>
+<p>Das System wird vollständig über <strong>Docker Compose</strong> orchestriert und besteht aus <strong>drei Containern</strong> in einem gemeinsamen Bridge-Netzwerk (<code>dif-network</code>). Nach außen ist ausschließlich der Reverse Proxy exponiert (Ports 80/443); Backend und Frontend sind rein netzwerkintern erreichbar.</p>
+<pre><code>Internet (443/80)
+      │
+      ▼
+┌──────────────────────────────┐
+│  nginx-service (dif-proxy)   │  jonasal/nginx-certbot
+│  - TLS-Terminierung (Certbot)│  Ports 80:80, 443:443
+│  - HTTP→HTTPS Redirect        │
+│  - Security-Header, Ratelimit │
+└─────────────┬────────────────┘
+              │ proxy_pass http://frontend:80
+              ▼
+┌──────────────────────────────┐
+│  frontend (nginx:alpine)     │  statisches SPA + API-Router
+│  location /      → SPA        │
+│  location /api/  → backend    │  (strippt /api/-Präfix)
+└─────────────┬────────────────┘
+              │ proxy_pass http://backend:8000/
+              ▼
+┌──────────────────────────────┐
+│  backend (FastAPI/Uvicorn)   │  Python 3.11, Port 8000 (intern)
+└──────────────────────────────┘</code></pre>
+<p>Wichtig: Es existieren <strong>zwei Nginx-Ebenen</strong>. Der <code>nginx-service</code> ist der TLS-Edge-Proxy; der <code>frontend</code>-Container ist zugleich Webserver für das SPA <strong>und</strong> interner API-Router.</p>
+<hr>
+<h2>2. Die Container im Detail</h2>
+<p>Quelle: <a href="../docker-compose.yml">docker-compose.yml</a></p>
+<table><thead><tr><th>Service</th><th>Image / Build</th><th>Ports</th><th>Zweck</th></tr></thead><tbody><tr><td><code>backend</code></td><td>Build aus <a href="../backend/Dockerfile">backend/Dockerfile</a></td><td>keine (nur intern <code>:8000</code>)</td><td>FastAPI-Applikation (KI-Logik)</td></tr><tr><td><code>frontend</code></td><td><code>nginx:alpine</code></td><td>keine (nur intern <code>:80</code>)</td><td>Liefert SPA aus, routet <code>/api/</code> zum Backend</td></tr><tr><td><code>nginx-service</code></td><td><code>jonasal/nginx-certbot:latest</code></td><td><code>80:80</code>, <code>443:443</code></td><td>Edge Reverse Proxy + automatisches Let's-Encrypt</td></tr></tbody></table>
+<h3>Backend-Container (<a href="../backend/Dockerfile">backend/Dockerfile</a>)</h3>
+<ul><li>Basis-Image: <code>python:3.11-slim</code></li><li>Dependencies (per <code>pip</code>, keine <code>requirements.txt</code>): <code>fastapi uvicorn pydantic httpx python-dotenv python-multipart</code></li><li>Startbefehl: <code>uvicorn main:app --host 0.0.0.0 --port 8000 --reload</code></li><li>Volumes: <code>./backend:/app</code> und <code>./backend/logs:/app/logs</code></li></ul>
+<blockquote><strong>Betriebshinweis:</strong> Das Backend läuft mit <code>--reload</code> und einem Bind-Mount des Quellcodes (<code>./backend:/app</code>). Der Container führt damit effektiv den <strong>Host-Code mit Hot-Reload</strong> aus (Entwicklungsmodus). Für einen echten Produktivbetrieb sollte <code>--reload</code> entfernt und ggf. mit mehreren Uvicorn-Workern gestartet werden.</blockquote>
+<h3>Frontend-Container</h3>
+<p>Mountet das statische SPA (<code>./frontend</code> → <code>/usr/share/nginx/html</code>) und die interne Nginx-Config (<a href="../nginx/frontend.conf">nginx/frontend.conf</a>, read-only).</p>
+<h3>nginx-service-Container</h3>
+<ul><li>Liest die Server-Konfiguration aus <code>./nginx/active</code> (gemountet nach <code>/etc/nginx/user_conf.d</code>).</li><li>Verwaltet Zertifikate in <code>./letsencrypt</code> (gemountet nach <code>/etc/letsencrypt</code>).</li><li>Erhält die Certbot-Kontakt-E-Mail über die Umgebungsvariable <code>CERTBOT_EMAIL</code> (aus <code>CERTBOT_UPDATES_RECEIVER</code>).</li><li><code>depends_on: [backend, frontend]</code>.</li></ul>
+<hr>
+<h2>3. Zwingend erforderliche Umgebungsvariablen (<code>.env</code>)</h2>
+<p>Alle Variablen liegen in <code>.env</code> im Projekt-Root. Die Datei wird vom Backend (<code>env_file</code> in Compose, geladen via <code>python-dotenv</code> in <a href="../backend/core/config.py">backend/core/config.py</a>), vom <code>Makefile</code> und von Compose selbst gelesen.</p>
+<h3>3.1 KI- &amp; Analyse-Dienste (Backend-Pflicht)</h3>
+<table><thead><tr><th>Variable</th><th>Verwendung im Code</th><th>Erforderlich</th></tr></thead><tbody><tr><td><code>IONOS_API_TOKEN</code></td><td>Bearer-Token für IONOS AI Model Hub (LLM + FLUX). <a href="../backend/services/llm.py">services/llm.py</a>, <a href="../backend/services/image.py">services/image.py</a></td><td><strong>Ja</strong></td></tr><tr><td><code>IONOS_URL</code></td><td>Chat-Completions-Endpoint, z. B. <code>https://openai.inference.de-txl.ionos.com/v1/chat/completions</code></td><td><strong>Ja</strong></td></tr><tr><td><code>MODEL_ID</code></td><td>Aktives LLM, aktuell <code>meta-llama/Llama-3.3-70B-Instruct</code></td><td><strong>Ja</strong></td></tr><tr><td><code>TAVILY_API_KEY</code></td><td>Websuche für den Faktencheck. <a href="../backend/services/search.py">services/search.py</a></td><td><strong>Ja</strong></td></tr><tr><td><code>SIGHTENGINE_USER</code></td><td>Sightengine <code>api_user</code> (Bild-KI-Erkennung). <a href="../backend/services/sightengine.py">services/sightengine.py</a></td><td><strong>Ja</strong></td></tr><tr><td><code>SIGHTENGINE_API</code></td><td>Sightengine <code>api_secret</code></td><td><strong>Ja</strong></td></tr><tr><td><code>OPENAI_API_KEY</code></td><td>In <a href="../backend/core/config.py">config.py</a> eingelesen, aktuell <strong>nicht genutzt</strong></td><td>Optional</td></tr></tbody></table>
+<h3>3.2 Infrastruktur / Deployment</h3>
+<table><thead><tr><th>Variable</th><th>Verwendung</th></tr></thead><tbody><tr><td><code>DOMAIN</code></td><td>Domain für Nginx-Config-Generierung (<code>make nginx-conf</code>) und Zertifikatspfade, z. B. <code>demokratie-im-feed.de</code></td></tr><tr><td><code>TARGET</code></td><td>Proxy-Ziel des Edge-Proxys, i. d. R. <code>frontend:80</code></td></tr><tr><td><code>BASE_URL</code></td><td>Basis-URL der Anwendung (z. B. <code>https://demokratie-im-feed.de</code>)</td></tr><tr><td><code>CERTBOT_UPDATES_RECEIVER</code></td><td>E-Mail für Let's-Encrypt-Benachrichtigungen (wird zu <code>CERTBOT_EMAIL</code>)</td></tr><tr><td><code>SSL_DOCKER_MOUNT</code></td><td>Legacy/optional, in aktueller Compose-Datei nicht referenziert</td></tr></tbody></table>
+<blockquote><strong>CORS:</strong> Zusätzlich ist im Backend (<a href="../backend/main.py">main.py</a>) die erlaubte Origin <strong>fest</strong> auf <code>https://demokratie-im-feed.de</code> (+ <code>www</code>) gesetzt. Bei einer neuen Domain muss dies <strong>im Code</strong> angepasst werden (nicht per <code>.env</code>).</blockquote>
+<blockquote><strong>Typo in der aktuellen <code>.env</code>:</strong> Hinter dem Wert von <code>SSL_DOCKER_MOUNT</code> steht ein loses <code>al.</code>. Die Variable wird in Compose nicht verwendet, daher ist der Effekt aktuell harmlos — beim Aufräumen entfernen.</blockquote>
+<h3>3.3 Minimal-Template <code>.env</code></h3>
+<pre><code># --- IONOS AI Model Hub ---
+IONOS_API_TOKEN=&quot;&lt;ionos-jwt-token&gt;&quot;
+IONOS_URL=&quot;https://openai.inference.de-txl.ionos.com/v1/chat/completions&quot;
+MODEL_ID=&quot;meta-llama/Llama-3.3-70B-Instruct&quot;
+
+# --- Websuche (Faktencheck) ---
+TAVILY_API_KEY=&quot;&lt;tavily-key&gt;&quot;
+
+# --- Bild-KI-Erkennung ---
+SIGHTENGINE_USER=&quot;&lt;sightengine-user-id&gt;&quot;
+SIGHTENGINE_API=&quot;&lt;sightengine-secret&gt;&quot;
+
+# --- Infrastruktur ---
+DOMAIN=demokratie-im-feed.de
+BASE_URL=https://demokratie-im-feed.de
+TARGET=frontend:80
+CERTBOT_UPDATES_RECEIVER=&quot;ops@example.de&quot;</code></pre>
+<hr>
+<h2>4. Nginx Reverse Proxy — Funktionsweise</h2>
+<p>Die Proxy-Konfiguration ist <strong>zweistufig</strong> und wird teilweise <strong>generiert</strong>.</p>
+<h3>4.1 Edge-Proxy (<code>nginx-service</code>)</h3>
+<p>Aktive Datei: <code>nginx/active/default.conf</code> — <strong>generiert</strong> aus dem Template <a href="../nginx/default.conf.template">nginx/default.conf.template</a> durch das Makefile-Target <code>nginx-conf</code> (via <code>envsubst</code>, ersetzt <code>${DOMAIN}</code> und <code>${TARGET}</code>).</p>
+<p>Aufgaben dieser Ebene:</p>
+<ul><li><strong>TLS-Terminierung</strong> mit Zertifikaten unter <code>/etc/letsencrypt/live/${DOMAIN}/</code> (<code>fullchain.pem</code> / <code>privkey.pem</code>); Erneuerung automatisch durch das <code>jonasal/nginx-certbot</code>-Image.</li><li><strong>HTTP → HTTPS Redirect</strong> (Port 80 → <code>301</code> auf <code>https</code>).</li><li><strong>Security-Header:</strong> <code>Strict-Transport-Security</code>, <code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy: same-origin</code>; <code>server_tokens off</code>.</li><li><strong>Basic-Auth (Login-Schutz):</strong> <code>auth_basic</code> im <code>location /</code> sperrt die <strong>gesamte</strong> Seite (Frontend <strong>und</strong> <code>/api/*</code>) hinter einen Login → Details und Einrichtung in <a href="#6-zugang-absichern-basic-auth">Abschnitt 6</a>.</li><li><strong>Rate Limiting:</strong> Zone <code>mylimit</code> mit <code>1000r/s</code>, Burst 1000.</li><li><strong>Upload-Limit:</strong> <code>client_max_body_size 6M</code>.</li><li><strong>WebSocket-Upgrade-Map</strong> aus <a href="../nginx/http-connection-upgrade-map.conf">nginx/http-connection-upgrade-map.conf</a>.</li><li><strong>Proxy-Timeouts:</strong> je 300 s (read/connect/send) — wichtig, da LLM-Antworten lange dauern können.</li><li>Leitet <strong>alles</strong> weiter: <code>proxy_pass http://${TARGET}</code> (= <code>frontend:80</code>).</li></ul>
+<h3>4.2 Interner Router (<code>frontend</code>)</h3>
+<p>Datei: <a href="../nginx/frontend.conf">nginx/frontend.conf</a></p>
+<ul><li><code>location /</code> → liefert das statische SPA (<code>try_files … /index.html</code>).</li><li><code>location /api/</code> → <code>proxy_pass http://backend:8000/</code> — der <strong>abschließende Slash</strong> entfernt das <code>/api/</code>-Präfix, sodass das Backend die Route ohne Präfix sieht (Browser <code>/api/analyze</code> → Backend <code>/analyze</code>).</li><li><code>client_max_body_size 10M</code>, Timeouts 300 s.</li></ul>
+<blockquote>Grund für den doppelten Nginx: TLS/Certbot und Sicherheits-Policies sind im Edge-Container gebündelt, während SPA-Serving + API-Routing beim Frontend-Container liegen. Das FastAPI-<code>root_path=&quot;/api&quot;</code> (<a href="../backend/main.py">main.py</a>) sorgt zusätzlich dafür, dass die Swagger-UI hinter dem Proxy unter <code>/api/docs</code> korrekt funktioniert.</blockquote>
+<hr>
+<h2>5. Schritt-für-Schritt: Deployment auf der IONOS-VM</h2>
+<p><strong>Voraussetzungen auf der VM:</strong> Docker + Docker Compose Plugin, Git, <code>make</code>. Der DNS <strong>A-Record</strong> der <code>DOMAIN</code> muss auf die öffentliche IP der VM zeigen (Pflicht, bevor Certbot Zertifikate ausstellen kann).</p>
+<pre><code># 1. Repository klonen
+git clone &lt;repo-url&gt; dif &amp;&amp; cd dif
+
+# 2. .env anlegen (siehe Abschnitt 3.3) und mit echten Secrets befüllen
+$EDITOR .env
+
+# 3. Nginx-Edge-Config aus Template generieren (Pflicht!)
+#    Erzeugt ./nginx/active/default.conf mit DOMAIN/TARGET aus der .env
+make nginx-conf
+
+# 4. Docker-Netzwerk anlegen (idempotent)
+make create-docker-network
+
+# 5. Container bauen und starten
+docker compose up -d --build
+
+# 6. Status &amp; Logs prüfen
+docker compose ps
+docker compose logs -f nginx-service   # TLS/Certbot-Ausstellung beobachten
+docker compose logs -f backend         # Applikations-/LLM-Logs</code></pre>
+<h3>Verifikation nach dem Start</h3>
+<ul><li><code>https://&lt;DOMAIN&gt;/</code> → SPA lädt.</li><li><code>https://&lt;DOMAIN&gt;/api/docs</code> → FastAPI Swagger-UI erreichbar.</li><li>Smoke-Test der IONOS-Anbindung (im Backend-Container): <code>docker compose exec backend python api/test_api.py</code> → erwartete Antwort „Verbunden".</li></ul>
+<h3>Wichtige Reihenfolge-Fallstricke</h3>
+<ol><li><strong><code>make nginx-conf</code> ist zwingend vor <code>docker compose up</code>.</strong> Ohne diesen Schritt ist <code>./nginx/active</code> leer und der Edge-Proxy startet ohne Server-Block.</li><li>Zeigt der DNS-Record noch nicht auf die VM, scheitert die Zertifikatsausstellung — Certbot versucht es periodisch erneut.</li><li>Der Zugang ist per <strong>Basic-Auth</strong> geschützt (Login-Gate vor der gesamten Seite). Wichtig bei einem Neuaufsetzen: die <code>.htpasswd</code>-<strong>Datei</strong> anlegen, <strong>bevor</strong> die Container gestartet werden. Einrichtung siehe <a href="#6-zugang-absichern-basic-auth">Abschnitt 6</a>.</li></ol>
+<h3>Updates ausrollen</h3>
+<pre><code>git pull &amp;&amp; make nginx-conf &amp;&amp; docker compose up -d --build</code></pre>
+<p>Da das Backend den Code per Bind-Mount + <code>--reload</code> lädt, genügt für reine Backend-Code-Änderungen oft schon ein Neuladen ohne Rebuild.</p>
+<blockquote><strong>Randnotiz:</strong> Der Kommentar zum Makefile-Target <code>setup-project-prod</code> (<a href="../Makefile">Makefile</a>) nennt <code>npm run docker:build</code> / <code>npm run docker:start</code> — es existiert jedoch <strong>keine</strong> <code>package.json</code>. Diese Angabe ist veraltet; maßgeblich sind die oben genannten <code>docker compose</code>-Befehle.</blockquote>
+<hr>
+<h2>6. Zugang absichern (Basic-Auth)</h2>
+<p>Die gesamte Seite (Frontend <strong>und</strong> alle <code>/api/*</code>-Routen) ist hinter einem Login gesperrt, damit die kostenpflichtigen KI-Modelle nicht öffentlich nutzbar sind. Umgesetzt am Edge-Proxy (<code>nginx-service</code>), nicht im Backend.</p>
+<p><strong>Wie es verdrahtet ist:</strong></p>
+<ul><li>Die Direktiven <code>auth_basic</code> + <code>auth_basic_user_file /etc/nginx/.htpasswd</code> stehen im <code>location /</code> des HTTPS-Servers im Template <a href="../nginx/default.conf.template">nginx/default.conf.template</a> (landen per <code>make nginx-conf</code> in der aktiven Config).</li><li>Die Zugangsdaten liegen in der Datei <code>.htpasswd</code> im Projekt-Root, per Compose read-only als <code>/etc/nginx/.htpasswd</code> in den Proxy gemountet.</li></ul>
+<p><strong>Einrichtung (auf der VM):</strong></p>
+<pre><code>cd /home/zdi-ki-lab/dif
+
+# 1. .htpasswd-DATEI mit Login &quot;dif&quot; anlegen (VOR dem ersten Container-Start).
+#    openssl fragt das Passwort interaktiv ab -&gt; kein Klartext in History/Chat.
+printf &#x27;dif:%s\n&#x27; &quot;$(openssl passwd -apr1)&quot; | sudo tee .htpasswd &gt;/dev/null
+
+# 2. Aktive Config generieren und Proxy neu laden
+sudo make nginx-conf
+sudo docker compose up -d nginx-service</code></pre>
+<p><strong>Prüfen:</strong></p>
+<pre><code>curl -I https://&lt;DOMAIN&gt;/                       # -&gt; 401 Unauthorized
+curl -I -u dif:DEINPASSWORT https://&lt;DOMAIN&gt;/   # -&gt; 200 OK</code></pre>
+<p><strong>Betrieb:</strong></p>
+<ul><li><strong>Passwort/Datei:</strong> Im Klartext wird nichts gespeichert; in <code>.htpasswd</code> steht nur ein Hash (<code>dif:$apr1$…</code>). Passwort vergessen → Schritt 1 erneut ausführen (überschreibt den Hash).</li><li><strong>Weitere Nutzer:</strong> anhängen mit <code>printf &#x27;name:%s\n&#x27; &quot;$(openssl passwd -apr1)&quot; | sudo tee -a .htpasswd</code>, danach <code>sudo docker compose exec nginx-service nginx -s reload</code>.</li><li><strong>Deaktivieren:</strong> die zwei <code>auth_basic</code>-Zeilen im Template entfernen → <code>sudo make nginx-conf</code> → <code>sudo docker compose restart nginx-service</code>.</li><li><strong>Troubleshooting <code>not a directory</code> beim Start:</strong> tritt nur auf, wenn der Container erstellt wurde, als <code>.htpasswd</code> noch <strong>kein</strong> File war (siehe Reihenfolge oben). Einmalig <code>sudo docker compose up -d --force-recreate nginx-service</code> behebt es.</li></ul>
+</main>
+</body>
+</html>

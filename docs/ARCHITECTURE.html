@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Funktionale Dokumentation (Architektur &amp; Logik)</title>
+<style>
+:root { --fg:#1f2328; --muted:#59636e; --border:#d1d9e0; --bg:#ffffff;
+        --code-bg:#f6f8fa; --accent:#0969da; --quote:#8250df; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+       color: var(--fg); background: #eef1f4; margin: 0; padding: 2rem 1rem; line-height: 1.6; }
+main { max-width: 920px; margin: 0 auto; background: var(--bg); padding: 3rem 3.5rem;
+       border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+h1 { font-size: 1.9rem; border-bottom: 2px solid var(--border); padding-bottom: .4em; margin-top: 0; }
+h2 { font-size: 1.45rem; border-bottom: 1px solid var(--border); padding-bottom: .3em; margin-top: 2.2em; }
+h3 { font-size: 1.15rem; margin-top: 1.8em; }
+h4 { font-size: 1rem; margin-top: 1.5em; }
+p, li { font-size: .95rem; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background: var(--code-bg); padding: .15em .4em; border-radius: 5px;
+       font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: .85em; }
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1rem 1.2rem; overflow-x: auto; line-height: 1.45; }
+pre code { background: none; padding: 0; font-size: .82rem; white-space: pre; }
+table { border-collapse: collapse; width: 100%; margin: 1.2em 0; font-size: .88rem; display: block; overflow-x: auto; }
+th, td { border: 1px solid var(--border); padding: .55em .8em; text-align: left; vertical-align: top; }
+th { background: var(--code-bg); font-weight: 600; }
+tr:nth-child(even) td { background: #fafbfc; }
+blockquote { border-left: 4px solid var(--quote); background: #faf8ff; margin: 1.2em 0;
+             padding: .6em 1.1em; color: #3d3352; border-radius: 0 6px 6px 0; }
+blockquote code { background: #efe9fb; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2.2em 0; }
+ul, ol { padding-left: 1.6em; }
+li { margin: .25em 0; }
+.doc-meta { color: var(--muted); font-size: .8rem; margin: -1.5em 0 2em; }
+</style>
+</head>
+<body>
+<main>
+<h1>Funktionale Dokumentation (Architektur &amp; Logik)</h1>
+<p><strong>Projekt:</strong> DiF-Check / „Fake Checker" (Demokratie im Feed) <strong>Fokus:</strong> ausschließlich <strong>Backend</strong> (<a href="../backend/">backend/</a>). Das Frontend wird bewusst ausgeklammert.</p>
+<hr>
+<h2>1. Applikationsstruktur</h2>
+<p>FastAPI-App (<a href="../backend/main.py">main.py</a>) mit <code>root_path=&quot;/api&quot;</code>, drei Routern und CORS beschränkt auf die Produktions-Domain. Schichtung:</p>
+<ul><li><strong><code>api/routes/</code></strong> — dünne HTTP-Layer, delegieren an Services (<a href="../backend/api/routes/analysis.py">analysis.py</a>, <a href="../backend/api/routes/text.py">text.py</a>, <a href="../backend/api/routes/image.py">image.py</a>).</li><li><strong><code>services/</code></strong> — Geschäftslogik + externe API-Calls (<a href="../backend/services/llm.py">llm.py</a>, <a href="../backend/services/search.py">search.py</a>, <a href="../backend/services/image.py">image.py</a>, <a href="../backend/services/sightengine.py">sightengine.py</a>).</li><li><strong><code>schemas/</code></strong> — Pydantic-Request-Modelle.</li><li><strong><code>utils/</code></strong> — Prompt-Loader + robuster LLM-JSON-Parser; Prompts als Markdown in <code>utils/prompts/</code>.</li></ul>
+<p>Alle externen Calls laufen <strong>asynchron</strong> über <code>httpx.AsyncClient</code>. Anfragen und LLM-Rohantworten werden nach <code>logs/LLM_responses.log</code> und stdout geloggt (<a href="../backend/core/logger.py">core/logger.py</a>).</p>
+<hr>
+<h2>2. Eingesetzte KI-/Analyse-Modelle im Backend</h2>
+<table><thead><tr><th>Dienst / Modell</th><th>Endpoint</th><th>Zuständigkeit</th><th>Aufgerufen in</th></tr></thead><tbody><tr><td><strong>IONOS · <code>meta-llama/Llama-3.3-70B-Instruct</code></strong> (via <code>MODEL_ID</code>)</td><td><code>IONOS_URL</code> (<code>…/v1/chat/completions</code>)</td><td>Textanalyse (Faktencheck), Fake-News-Text-Generierung, Bild-Prompt-Generierung</td><td><a href="../backend/services/llm.py">services/llm.py</a></td></tr><tr><td><strong>IONOS · <code>black-forest-labs/FLUX.1-schnell</code></strong> (hartkodiert)</td><td><code>…/v1/images/generations</code></td><td>Text-zu-Bild-Generierung des „Beweis"-Bildes</td><td><a href="../backend/services/image.py">services/image.py</a></td></tr><tr><td><strong>Tavily</strong></td><td><code>https://api.tavily.com/search</code></td><td>Websuche / Lateral Reading; wird vom LLM per Function-Calling ausgelöst (<code>search_depth: advanced</code>, max 3 Quellen)</td><td><a href="../backend/services/search.py">services/search.py</a></td></tr><tr><td><strong>Sightengine · Modell <code>genai</code></strong></td><td><code>https://api.sightengine.com/1.0/check.json</code></td><td>Erkennung KI-generierter Bilder (Upload oder URL)</td><td><a href="../backend/services/sightengine.py">services/sightengine.py</a></td></tr></tbody></table>
+<blockquote><strong>Hinweis:</strong> Die README nennt „Meta-Llama-3.1". Aktiv konfiguriert ist jedoch <strong>Llama-3.3-70B-Instruct</strong>; die 405B-Variante ist in der <code>.env</code> auskommentiert. Das LLM ist frei über <code>MODEL_ID</code> austauschbar (OpenAI-kompatibles Schema).</blockquote>
+<hr>
+<h2>3. Interne Endpunkte (Routen)</h2>
+<p>Backend-intern ohne <code>/api</code>-Präfix definiert; extern via Nginx unter <code>/api/...</code> erreichbar. Alle Methoden: <strong>POST</strong>.</p>
+<table><thead><tr><th>Externe Route</th><th>Backend-Route</th><th>Request-Schema</th><th>Service</th><th>Funktion</th></tr></thead><tbody><tr><td><code>/api/analyze</code></td><td><code>/analyze</code></td><td><code>AnalysisRequest {text, user_choice}</code></td><td><code>analyze_text</code></td><td>Nachricht auf Wahrheitsgehalt prüfen (mit Websuche)</td></tr><tr><td><code>/api/analyze-image</code></td><td><code>/analyze-image</code></td><td>Multipart: <code>file</code> <strong>oder</strong> <code>url</code></td><td><code>analyze_media</code></td><td>Bild auf KI-Generierung prüfen</td></tr><tr><td><code>/api/generate-fake</code></td><td><code>/generate-fake</code></td><td><code>GenerationRequest {thema, zielgruppe, emotion, strategie}</code></td><td><code>generate_fake_text</code></td><td>Fake-News-Text erzeugen</td></tr><tr><td><code>/api/generate-image-prompt</code></td><td><code>/generate-image-prompt</code></td><td><code>ImagePromptRequest {schlagzeile, text}</code></td><td><code>generate_image_prompt</code></td><td>Bild-Prompt aus Fake-News ableiten</td></tr><tr><td><code>/api/generate-image-flux</code></td><td><code>/generate-image-flux</code></td><td><code>ImageGenRequest {prompt}</code></td><td><code>generate_flux_image</code></td><td>Bild via FLUX generieren</td></tr></tbody></table>
+<p>Laufzeit-Dokumentation: <strong><code>/api/docs</code></strong> (Swagger) und <strong><code>/api/openapi.json</code></strong>.</p>
+<hr>
+<h2>4. Datenfluss — Hauptfunktion 1: Nachrichten checken</h2>
+<p>Kernstück ist <code>analyze_text()</code> in <a href="../backend/services/llm.py">services/llm.py</a>. Es handelt sich um einen <strong>zweistufigen LLM-Flow mit erzwungenem Tool-Calling</strong> (agentischer Faktencheck):</p>
+<pre><code>POST /api/analyze  {text, user_choice}
+   │
+   ▼
+[PASS 1]  IONOS Chat Completion
+   messages = [ system: analyze_fake_text.md, user: &lt;text&gt; ]
+   tools = [web_search],  tool_choice = &quot;required&quot;   ← LLM MUSS eine Suchanfrage stellen
+   │
+   ├─ LLM liefert tool_call → { query: &quot;&lt;neutrale Suchanfrage&gt;&quot; }
+   │
+   ▼
+[TOOL]  search_tavily(query)
+   → Tavily (advanced, max 3, include_answer)
+   → formatierte Quellen (&quot;Quelle: &lt;url&gt;\nInhalt: &lt;content&gt;&quot;)
+   │
+   ▼
+[PASS 2]  IONOS Chat Completion (ohne Tools)
+   messages += assistant(tool_call) + tool(search_results)
+             + user(&quot;Vergleiche die Behauptung mit den Suchergebnissen …&quot;)
+   → Antwort = Fließtext-Erklärung  +  JSON-Block
+   │
+   ▼
+[PARSING]  utils/parser.py
+   - llm_answer = Text vor dem ersten &quot;{&quot;
+   - parse_llm_json() extrahiert den JSON-Block
+   → Merge zu einem Response-Objekt</code></pre>
+<p><strong>Struktur der Antwort</strong> (vom Prompt <a href="../backend/utils/prompts/analyze_fake_text.md">analyze_fake_text.md</a> vorgegeben): freundlicher Erklärtext (<code>llm_answer</code>) plus JSON mit <code>overall_score</code>, <code>risk_level</code>, <code>scores {quelle, emotion, evidenz, kontext}</code>, <code>warnsignale</code>, <code>lernmomente</code>, <code>handlungsempfehlungen</code>, <code>quellen_links</code> (max. 3). Die Analyse folgt einer 7-Schritt-Logik (Quelle → Kontext → Emotion → Evidenz → Gesamtscore/Risiko-Level nach Correctiv-Logik → Quellen/Lernmomente → Ausgabe).</p>
+<p><strong>Robustheit:</strong> Timeout 120 s; strukturierte Fehlerobjekte mit Fehlercodes bei <code>ReadTimeout</code> (<code>TIMEOUT</code>), HTTP-Fehlern (<code>API_UNAVAILABLE</code>), leeren Antworten (<code>EMPTY_RESPONSE</code> / <code>SECOND_PASS_EMPTY</code>) und fehlgeschlagenem Parsing (<code>JSON_FAILED</code>). Fällt (theoretisch) kein Tool-Call an, wird die Direktantwort ohne Websuche verarbeitet.</p>
+<h3>4b. Nebenfluss: Bild-Faktencheck (<code>/api/analyze-image</code>)</h3>
+<p><code>analyze_media()</code> (<a href="../backend/services/sightengine.py">services/sightengine.py</a>) nimmt entweder einen <strong>Datei-Upload</strong> (<code>POST</code> mit <code>files</code>) oder eine <strong>URL</strong> (<code>GET</code> mit <code>params</code>) entgegen, ruft Sightengine mit <code>models=genai</code> auf und gibt die <strong>rohe Sightengine-JSON</strong> zurück (u. a. Wahrscheinlichkeit für KI-Generierung). Kein LLM beteiligt.</p>
+<hr>
+<h2>5. Datenfluss — Hauptfunktion 2: Fake News generieren</h2>
+<p>Ein <strong>dreistufiger, vom Client orchestrierter Prozess</strong> — jeder Schritt ist ein eigener Endpunkt; das Frontend ruft sie sequenziell auf:</p>
+<pre><code>① POST /api/generate-fake  {thema, zielgruppe, emotion, strategie}
+      → generate_fake_text()  →  IONOS (Llama 3.3)
+      → JSON { schlagzeile, text, manipulationstechniken[], warnsignale[] }
+                    │
+                    ▼
+② POST /api/generate-image-prompt  {schlagzeile, text}
+      → generate_image_prompt()  →  IONOS (Llama 3.3)
+      → { midjourney_prompt: &quot;&lt;deutscher Bild-Prompt&gt;&quot; }
+        (Prompt zielt auf ein „authentisch-unperfektes&quot; Beweisfoto,
+         explizit ohne Text/Buchstaben im Bild)
+                    │
+                    ▼
+③ POST /api/generate-image-flux  {prompt}
+      → generate_flux_image()  →  IONOS FLUX.1-schnell (1024×1024, b64_json)
+      → { image_url: &quot;data:image/png;base64,…&quot;, revised_prompt }</code></pre>
+<ul><li><strong>Schritt ①</strong> (<a href="../backend/api/routes/text.py">text.py</a> → <code>generate_fake_text</code>): Erzeugt aus den vier Parametern über <a href="../backend/utils/prompts/generate_fake_text.md">generate_fake_text.md</a> einen manipulativen Text als JSON. Der Prompt erzwingt reine JSON-Ausgabe; <code>parse_llm_json</code> sichert das Parsing ab.</li><li><strong>Schritt ②</strong> (<a href="../backend/api/routes/image.py">image.py</a> → <code>generate_image_prompt</code>): Leitet aus Schlagzeile + Textauszug einen deutschen Bild-Prompt ab (<a href="../backend/utils/prompts/generate_image_prompt.md">generate_image_prompt.md</a>). Rückgabe ist ein reiner String (Feldname <code>midjourney_prompt</code>, technisch aber für FLUX bestimmt).</li><li><strong>Schritt ③</strong> (<a href="../backend/api/routes/image.py">image.py</a> → <code>generate_flux_image</code>): Ruft den IONOS-Bild-Endpoint mit <code>FLUX.1-schnell</code> auf und liefert das Bild als Base64-Data-URI zurück (kein externes Hosting).</li></ul>
+<p><strong>Didaktischer Zweck (Perspektivwechsel):</strong> Der Nutzer erlebt, wie leicht sich Text <strong>und</strong> passendes „Beweisbild" für Desinformation synthetisieren lassen — die zurückgelieferten <code>manipulationstechniken</code> und <code>warnsignale</code> machen die Manipulation anschließend transparent.</p>
+<hr>
+<h2>6. Querschnitts-Aspekte</h2>
+<ul><li><strong>Prompt-Management:</strong> Prompts sind als Markdown ausgelagert und werden beim Import von <code>services/llm.py</code> einmalig geladen (<a href="../backend/utils/prompt_loader.py">utils/prompt_loader.py</a>). Änderungen am KI-Verhalten erfolgen ohne Code-Änderung über die <code>.md</code>-Dateien.</li><li><strong>LLM-JSON-Parsing</strong> (<a href="../backend/utils/parser.py">utils/parser.py</a>): Extrahiert den JSON-Block zwischen erstem <code>{</code> und letztem <code>}</code>, korrigiert unbalancierte Klammern und parst mit <code>strict=False</code> — Toleranz gegenüber „geschwätzigen" LLM-Antworten.</li><li><strong>Logging:</strong> Zentraler Logger schreibt strukturiert (Anfragen, LLM-Rohantworten, Tool-Calls, Suchtreffer) nach Datei <strong>und</strong> stdout.</li><li><strong>Sicherheit (Backend):</strong> Die Endpunkte selbst sind <strong>nicht authentifiziert</strong> (keine Auth auf App-Ebene); der Zugriffsschutz liegt vorgelagert am Edge-Proxy per <strong>Basic-Auth</strong> (gesamte Seite inkl. <code>/api/*</code> hinter Login, siehe <a href="DEPLOYMENT.md#6-zugang-absichern-basic-auth">DEPLOYMENT.md, Abschnitt 6</a>) sowie CORS-Restriktion und Rate-Limiting. Basic-Auth ist ein gemeinsames Login für alle; für feingranulareren Missbrauchsschutz wäre Auth/Quota <strong>pro Client</strong> auf den generativen Routen sinnvoll.</li></ul>
+</main>
+</body>
+</html>
